@@ -53,11 +53,6 @@ fundamental_agent:
     - tavily_search
   behaviour:
     constraints:
-      - Min daily volume:
-          - Equities: $50M
-          - Crypto: $100M
-      - Min market cap:
-          - $500M unless explicitly justified
       - Must evaluate each ticker individually
       - Must explicitly state pass/fail reasoning per ticker
       - Must return overall fundamental_pass = false if any critical asset fails
