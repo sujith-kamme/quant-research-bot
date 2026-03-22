@@ -1,0 +1,323 @@
+identify_alpha_theme:
+  agent: market_agent
+  description: >
+    Identify a strong alpha opportunity based on asset_class.
+
+    Adapt search logic:
+
+      equities:
+        - sector rotation
+        - earnings trends
+        - institutional flows
+
+      crypto:
+        - narrative cycles (L1, DeFi, AI, etc.)
+        - liquidity flows
+        - BTC dominance shifts
+
+      macro:
+        - interest rates
+        - inflation expectations
+        - policy changes
+
+    Entry mode:
+      - user_tickers → infer theme, validate, refine hypothesis
+      - user_theme → find best tickers within theme
+      - none → discover autonomously
+
+    On retry:
+      - incorporate rejection_feedback fully
+      - do NOT reuse same theme or tickers
+
+  inputs:
+    - asset_class        # equities | crypto | macro | mixed
+    - user_tickers
+    - user_theme
+    - rejection_feedback
+
+  expected_output:
+    theme: str
+    tickers: List[str]
+    hypothesis: str
+
+
+check_fundamentals:
+  agent: fundamental_agent
+  description: >
+    Perform strict sanity checks based on asset_class.
+
+    equities:
+      - avg daily volume above threshold
+      - market cap above threshold
+      - revenue_growth OR earnings_growth present
+      - no distress (bankruptcy/delisting risk)
+
+    crypto:
+      - sufficient trading volume/liquidity
+      - active market participation
+      - avoid illiquid/dead tokens
+
+    macro:
+      - instrument liquidity (futures/ETF proxies)
+      - tradability
+
+    If required data missing → FAIL.
+
+  inputs:
+    - asset_class
+    - theme
+    - tickers
+    - hypothesis
+
+  expected_output:
+    fundamental_pass: bool
+    fundamental_reason: str
+
+
+classify_regime:
+  agent: regime_agent
+  description: >
+    Classify market regime using observable price behavior (asset-agnostic).
+
+    Must reference:
+      - 20–60 day trend direction
+      - volatility vs recent history
+      - breakout vs range structure
+
+  inputs:
+    - asset_class
+    - theme
+    - tickers
+
+  expected_output:
+    regime: str        # TRENDING | MEAN_REVERTING | MIXED
+    volatility: str    # LOW | MED | HIGH
+
+
+assess_sentiment:
+  agent: sentiment_agent
+  description: >
+    Evaluate sentiment efficiently, adapting to asset_class.
+
+    equities:
+      - news flow intensity
+      - analyst consensus
+      - earnings sentiment
+
+    crypto:
+      - narrative intensity
+      - social momentum
+      - hype cycles
+
+    macro:
+      - positioning extremes
+      - consensus macro views
+
+    Output must assess:
+      - sentiment direction
+      - crowding / reversal risk
+
+  inputs:
+    - asset_class
+    - theme
+    - tickers
+    - hypothesis
+
+  expected_output:
+    sentiment: str        # BULLISH | BEARISH | HYPE | NEUTRAL
+    sentiment_risk: str   # LOW | MED | HIGH
+
+
+stress_test_risks:
+  agent: risk_agent
+  description: >
+    Aggressively attempt to invalidate the idea.
+
+    Must evaluate:
+
+    equities:
+      - earnings dependency
+      - valuation compression risk
+      - regulatory/sector risk
+
+    crypto:
+      - liquidity collapse risk
+      - narrative decay
+      - protocol fragility
+
+    macro:
+      - policy reversal risk
+      - macro regime shifts
+
+    General:
+      - correlation concentration
+      - single-driver dependency
+
+    Must assign HIGH risk if:
+      - sentiment = HYPE AND sentiment_risk = HIGH
+      - extreme dependence on one factor
+      - clear fragility
+
+  inputs:
+    - asset_class
+    - theme
+    - tickers
+    - hypothesis
+    - regime
+    - volatility
+    - sentiment
+    - sentiment_risk
+
+  expected_output:
+    risk_score: str      # LOW | MED | HIGH
+    risks: List[str]
+
+
+score_alpha_potential:
+  agent: alpha_scorer_agent
+  description: >
+    Compute alpha_score (0–10) using pipeline outputs only.
+
+    Score 4 dimensions (0–2.5 each):
+      1. Regime alignment
+      2. Sentiment edge
+      3. Fundamental quality
+      4. Expected persistence
+
+    Apply penalties:
+      - risk_score HIGH → subtract ≥ 2.0
+      - HYPE + HIGH risk → strong penalty
+
+  inputs:
+    - theme
+    - tickers
+    - hypothesis
+    - fundamental_pass
+    - fundamental_reason
+    - regime
+    - volatility
+    - sentiment
+    - sentiment_risk
+    - risk_score
+    - risks
+
+  expected_output:
+    alpha_score: float
+    alpha_reasoning: str
+
+
+make_research_decision:
+  agent: manager_agent
+  description: >
+    Make final decision based on pipeline outputs.
+
+    PROCEED:
+      - alpha_score ≥ 6.0
+      - fundamental_pass = True
+      - risk LOW or MED
+
+    FIXABLE_REJECT:
+      - correctable issues (weak theme, wrong tickers, regime mismatch)
+      - must provide actionable rejection_feedback
+
+    HARD_VETO:
+      - risk HIGH
+      - alpha_score < 3.0
+      - fundamental FAIL (unfixable)
+      - sentiment HYPE + HIGH risk
+
+    Retry rule:
+      - retry_count ≥ 2 → cannot return FIXABLE_REJECT
+
+    Priority:
+      HIGH → alpha ≥ 7.5, risk LOW/MED, sentiment not HYPE
+      MED  → alpha 6.0–7.4
+      LOW  → alpha ≥ 6.0 with concerns
+
+  inputs:
+    - theme
+    - tickers
+    - hypothesis
+    - fundamental_pass
+    - fundamental_reason
+    - regime
+    - volatility
+    - sentiment
+    - sentiment_risk
+    - risk_score
+    - risks
+    - alpha_score
+    - alpha_reasoning
+    - retry_count
+
+  expected_output:
+    decision: str              # PROCEED | FIXABLE_REJECT | HARD_VETO
+    priority: str              # HIGH | MED | LOW (PROCEED only)
+    reasoning: str
+    rejection_feedback: str
+    hard_veto_message: str
+
+
+design_quant_strategy:
+  agent: quant_agent
+  description: >
+    Convert approved idea into a quant research plan.
+
+    Must define BOTH:
+      1. Tradable universe
+      2. Backtestable signals
+
+    Universe construction must adapt to asset_class:
+
+    equities:
+      - sector peers
+      - index/ETF benchmarks
+      - ensure cross-sectional breadth (5–20 assets)
+
+    crypto:
+      - correlated tokens
+      - sector tokens
+      - avoid illiquid assets
+
+    macro:
+      - related instruments (futures, ETFs)
+
+    Strategy must align with asset_class:
+
+    equities:
+      - cross-sectional momentum
+      - sector rotation
+      - earnings drift
+
+    crypto:
+      - momentum
+      - mean reversion
+      - relative strength
+
+    macro:
+      - trend following
+      - cross-asset momentum
+
+    Each signal must:
+      - be specific
+      - be measurable
+      - include how it is computed (briefly)
+
+  inputs:
+    - asset_class
+    - theme
+    - tickers
+    - hypothesis
+    - regime
+    - volatility
+    - sentiment
+    - risk_score
+    - risks
+    - alpha_score
+    - priority
+
+  expected_output:
+    strategy_type: str
+    signals: List[str]
+    universe: List[str]
+    horizon: str
