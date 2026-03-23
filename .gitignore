@@ -10,7 +10,6 @@ wheels/
 .venv
 
 .env
-output/*
 
 # UV
 .python-version
