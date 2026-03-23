@@ -1,36 +1,44 @@
 identify_alpha_theme:
   agent: market_agent
   description: >
-    Identify a strong alpha opportunity based on asset_class.
+    Scan recent financial news and market developments to find a stock or asset
+    being materially impacted by a real, current catalyst. Build a directional
+    movement hypothesis around it.
 
-    Adapt search logic:
+    Step 1 — Search news first:
+      Search for: "stock market news today", "earnings movers", "crypto news today",
+      "FDA approval", "analyst upgrade downgrade", or any relevant asset_class news.
+      Focus on the last 24-72 hours. Find what is ACTUALLY moving and why.
 
-      equities:
-        - sector rotation
-        - earnings trends
-        - institutional flows
+    Step 2 — Identify the catalyst:
+      What is the specific event or development? Examples:
+        equities: earnings beat/miss, FDA decision, M&A announcement, macro data print
+        crypto: ETF flow data, protocol upgrade, exchange listing, regulatory ruling
+        cross-asset: Fed minutes, CPI print, geopolitical development
 
-      crypto:
-        - narrative cycles (L1, DeFi, AI, etc.)
-        - liquidity flows
-        - BTC dominance shifts
+    Step 3 — Assess direction:
+      Is the catalyst a tailwind (buy-side) or headwind (short-side)?
+      Is it already fully priced in, or is there room to run?
 
-      macro:
-        - interest rates
-        - inflation expectations
-        - policy changes
+    Step 4 — Select tickers:
+      Pick 3-5 instruments DIRECTLY impacted by the catalyst.
+      Not loosely correlated — directly in the path of the catalyst.
+
+    Step 5 — Form hypothesis:
+      State clearly: [catalyst] -> [expected movement] -> [timeframe]
 
     Entry mode:
-      - user_tickers → infer theme, validate, refine hypothesis
-      - user_theme → find best tickers within theme
-      - none → discover autonomously
+      - user_tickers: news-validate these specific tickers, find the catalyst driving them
+      - user_theme: find the freshest news catalyst within that theme
+      - none: scan broadly, find the strongest catalyst-driven opportunity right now
 
     On retry:
-      - incorporate rejection_feedback fully
-      - do NOT reuse same theme or tickers
+      - Must find a different catalyst — do not revisit the same news story
+      - Must change tickers — do not reuse any from the previous attempt
+      - State explicitly what is different
 
   inputs:
-    - asset_class        # equities | crypto | macro | mixed
+    - asset_class
     - user_tickers
     - user_theme
     - rejection_feedback
