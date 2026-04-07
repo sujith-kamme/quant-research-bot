@@ -1,0 +1,42 @@
+{
+  "asset_class": null,
+  "user_tickers": null,
+  "user_theme": null,
+  "theme": "Energy and Travel Sector Rally",
+  "tickers": [
+    "XOM",
+    "CVX",
+    "DAL",
+    "LUV",
+    "MSCI"
+  ],
+  "hypothesis": "Recent easing tensions in Iran after diplomatic talks initiated by Trump, reducing fears of conflict and its impact on oil prices -> Positive tailwind for stocks, particularly in energy and travel sectors, likely leading to continued rally in indices -> 2-4 weeks.",
+  "fundamental_pass": false,
+  "fundamental_reason": "DAL, LUV",
+  "regime": "UP",
+  "volatility": "HIGH",
+  "sentiment": "NEUTRAL",
+  "sentiment_risk": "medium",
+  "risk_score": "HIGH",
+  "risks": [
+    "Earnings reports from XOM and CVX reveal weaker than expected results due to unexpected production cuts or increased operational costs. If major energy companies fail to meet earnings expectations, it undermines the narrative that easing tensions will boost profitability, leading to a potential sell-off in the sector.",
+    "A sudden regulatory change imposes stricter emission standards on energy companies, significantly increasing their compliance costs. Heightened regulatory scrutiny can lead to decreased profit margins for energy stocks, which directly contradicts the rationale for a rally in the sector.",
+    "The market experiences a sudden narrative decay as tensions in other regions escalate, shifting investor focus away from the energy and travel sectors. If geopolitical narratives shift, investor sentiment may decline, resulting in reduced inflows into energy and travel stocks, undermining the anticipated rally.",
+    "A liquidity crisis occurs, causing significant drops in trading volumes for the discussed equities. A collapse in liquidity can hinder the ability to execute trades and cause forced selling, which will lead to heightened volatility and potential price declines in the sector.",
+    "A macro regime shift results from unexpected monetary policy changes by the Federal Reserve, leading to an increase in interest rates. Higher interest rates can negatively impact economic growth forecasts, which would dampen the outlook for travel and energy sectors, contradicting the bullish thesis.",
+    "The rally heavily relies on the performance of XOM and CVX, neglecting other factors affecting DAL and LUV. If the performance of DAL and LUV doesn't correlate positively with the energy sector's rally, it exposes the idea to concentration risk, particularly if XOM and CVX underperform."
+  ],
+  "alpha_score": 2.0,
+  "alpha_reasoning": "1. Regime alignment: 2.0 (supports an UP regime). 2. Sentiment edge: 0.0 (sentiment is NEUTRAL). 3. Fundamental quality: 0.0 (fundamental_pass is False, DAL and LUV underperform). 4. Expected persistence: 0.0 (high volatility and significant risks present). Total score before penalties is 2.0; after deducting 2.0 for HIGH risk, the final score is 0.0.",
+  "decision": "HARD_VETO",
+  "priority": "",
+  "manager_reasoning": "The idea fails due to a fundamental failure, with DAL and LUV underperforming, and the alpha score is below the threshold required for consideration. Additionally, the assessment identifies several high risks associated with the theme, making it untenable for quant research allocation.",
+  "strategy_type": null,
+  "signals": null,
+  "universe": null,
+  "horizon": null,
+  "retry_count": 0,
+  "rejection_feedback": null,
+  "hard_veto_message": "The proposed investment idea fundamentally fails due to the low performance of key stocks and presents high risks, making it unsuitable for further research.",
+  "run_complete": true
+}
